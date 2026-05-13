@@ -12,6 +12,17 @@ try {
   throw error;
 }
 
+let favicon = "";
+try {
+  favicon = await readFile(new URL("../favicon.svg", import.meta.url), "utf8");
+} catch (error) {
+  if (error?.code === "ENOENT") {
+    assert.fail("favicon.svg should exist for the Pixal3D browser tab icon");
+  }
+
+  throw error;
+}
+
 assert.match(
   html,
   /<iframe[^>]+src="https:\/\/tencentarc-pixal3d\.hf\.space[^"]*"/i,
@@ -40,4 +51,16 @@ assert.match(
   html,
   /AI[^<]*3D|3D[^<]*AI/i,
   "page should present the MVP as an AI 3D model generation experience",
+);
+
+assert.match(
+  html,
+  /<link[^>]+rel="icon"[^>]+href="\.\/favicon\.svg"[^>]*>/i,
+  "index.html should reference favicon.svg as the browser tab icon",
+);
+
+assert.match(
+  favicon,
+  /<svg[^>]+viewBox="0 0 64 64"[\s\S]+<polygon/i,
+  "favicon.svg should be a compact SVG icon with geometric Pixal3D cube shapes",
 );
