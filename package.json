@@ -1,0 +1,10 @@
+{
+  "name": "pixal3d-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/site.test.mjs",
+    "start": "npx --yes http-server . -p 4173 -c-1"
+  }
+}
