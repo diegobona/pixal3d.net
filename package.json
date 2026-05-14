@@ -6,5 +6,8 @@
   "scripts": {
     "test": "node tests/site.test.mjs",
     "start": "npx --yes http-server . -p 4173 -c-1"
+  },
+  "dependencies": {
+    "@gradio/client": "^2.2.0"
   }
 }

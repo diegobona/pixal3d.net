@@ -34,20 +34,31 @@ try {
   throw error;
 }
 
+let appJs = "";
+try {
+  appJs = await readFile(new URL("../app.js", import.meta.url), "utf8");
+} catch (error) {
+  if (error?.code === "ENOENT") {
+    assert.fail("app.js should exist for the Gradio API integration");
+  }
+
+  throw error;
+}
+
 const seoDescription =
   "Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production.";
 const crawlableCopy = html.replace(/\s(?:src|href)="[^"]*"/gi, "");
 
 assert.match(
   html,
-  /<iframe[^>]+src="https:\/\/tencentarc-pixal3d\.hf\.space[^"]*"/i,
-  "index.html should embed the TencentARC/Pixal3D Space runtime in an iframe",
+  /<script\s+type="module"\s+src="\.\/app\.js"><\/script>/i,
+  "index.html should load the Gradio API integration script",
 );
 
 assert.match(
   html,
-  /<iframe[^>]+title="Pixal3D AI 3D model generation workspace"/i,
-  "iframe should include an accessible title that mentions Pixal3D",
+  /<input[^>]+id="image-input"[^>]+type="file"[^>]+accept="image\/\*"[^>]*>/i,
+  "page should provide an image upload input for API generation",
 );
 
 assert.doesNotMatch(
@@ -94,7 +105,7 @@ assert.doesNotMatch(
 
 assert.match(
   html,
-  /AI[^<]*3D|3D[^<]*AI|Image-to-3D/i,
+  /AI[^<]*3D|3D[^<]*AI|Image-to-3D|Generate 3D Model/i,
   "page should present the site as an AI 3D or image-to-3D experience",
 );
 
@@ -163,3 +174,23 @@ assert.doesNotMatch(
   /\.status-dot|\.actions\s*{/i,
   "styles should not keep unused status dot or action container rules",
 );
+
+assert.match(
+  appJs,
+  /@gradio\/client@2\.2\.0\/\+esm/i,
+  "app.js should import the Gradio client from a browser-compatible CDN",
+);
+
+assert.match(
+  appJs,
+  /SPACE_URL\s*=\s*"https:\/\/tencentarc-pixal3d\.hf\.space"[\s\S]*Client\.connect\(SPACE_URL/i,
+  "app.js should connect to the public Pixal3D hf.space Gradio endpoint",
+);
+
+for (const endpoint of ["/preprocess", "/generate_3d", "/extract_glb_api"]) {
+  assert.match(
+    appJs,
+    new RegExp(endpoint.replace("/", "\\/")),
+    `app.js should call the ${endpoint} endpoint`,
+  );
+}
