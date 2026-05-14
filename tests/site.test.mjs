@@ -74,6 +74,12 @@ assert.match(
   "header should show the Pixal3D logo before the title",
 );
 
+assert.doesNotMatch(
+  html,
+  /status-dot|Workspace actions|Embedded AI 3D workspace/i,
+  "header should not show a decorative status dot",
+);
+
 assert.match(
   html,
   /<p\s+class="tagline">\s*Turn Any Image into a Realistic 3D Model\s*<\/p>/i,
@@ -150,4 +156,10 @@ assert.match(
   css,
   /\.brand-logo\s*{[\s\S]*width:\s*48px;[\s\S]*height:\s*48px;/i,
   "header logo should use a stable 48px square size",
+);
+
+assert.doesNotMatch(
+  css,
+  /\.status-dot|\.actions\s*{/i,
+  "styles should not keep unused status dot or action container rules",
 );
