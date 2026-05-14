@@ -23,6 +23,10 @@ try {
   throw error;
 }
 
+const seoDescription =
+  "Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production.";
+const crawlableCopy = html.replace(/\s(?:src|href)="[^"]*"/gi, "");
+
 assert.match(
   html,
   /<iframe[^>]+src="https:\/\/tencentarc-pixal3d\.hf\.space[^"]*"/i,
@@ -31,7 +35,7 @@ assert.match(
 
 assert.match(
   html,
-  /<iframe[^>]+title="[^"]*Pixal3D[^"]*"/i,
+  /<iframe[^>]+title="Pixal3D AI 3D model generation workspace"/i,
   "iframe should include an accessible title that mentions Pixal3D",
 );
 
@@ -51,6 +55,24 @@ assert.match(
   html,
   /AI[^<]*3D|3D[^<]*AI/i,
   "page should present the MVP as an AI 3D model generation experience",
+);
+
+assert.match(
+  html,
+  new RegExp(`<meta\\s+name="description"\\s+content="${seoDescription.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\s*\\/?>`, "i"),
+  "page should use a conventional AI 3D site meta description",
+);
+
+assert.match(
+  html,
+  new RegExp(`<meta\\s+property="og:description"\\s+content="${seoDescription.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\s*\\/?>`, "i"),
+  "page should use the same clean Open Graph description",
+);
+
+assert.doesNotMatch(
+  crawlableCopy,
+  /\b(MVP|Hugging Face|HuggingFace|TencentARC|official)\b/i,
+  "crawlable page text and metadata should not mention MVP, Hugging Face, TencentARC, or official status",
 );
 
 assert.match(
