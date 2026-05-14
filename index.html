@@ -37,55 +37,16 @@
       </header>
 
       <main class="workspace">
-        <section class="api-studio" aria-label="Pixal3D API generator">
-          <form class="control-panel" id="pixal3d-form">
-            <label class="upload-zone" for="image-input">
-              <input id="image-input" name="image" type="file" accept="image/*" required />
-              <span class="upload-kicker">Source Image</span>
-              <strong>Upload an image</strong>
-              <span>PNG, JPG, or WebP works best</span>
-            </label>
-
-            <div class="settings-grid">
-              <label>
-                Seed
-                <input id="seed-input" name="seed" type="number" value="42" min="0" step="1" />
-              </label>
-
-              <label>
-                Resolution
-                <select id="resolution-input" name="resolution">
-                  <option value="512">512 Fast test</option>
-                  <option value="1024">1024 Balanced</option>
-                  <option value="1536" selected>1536 High quality</option>
-                </select>
-              </label>
-            </div>
-
-            <button class="primary-action" type="submit">Generate 3D Model</button>
-            <a class="secondary-action" href="https://tencentarc-pixal3d.hf.space" target="_blank" rel="noreferrer">
-              Open Full Generator
-            </a>
-
-            <p class="api-status" id="api-status" role="status">
-              Upload an image to call the public Pixal3D Gradio API.
-            </p>
-          </form>
-
-          <section class="result-panel" aria-label="Generation result">
-            <div class="preview-frame">
-              <img id="preview-image" alt="" hidden />
-              <p id="preview-empty">Your generated asset status will appear here.</p>
-            </div>
-
-            <div class="result-actions">
-              <a class="download-link" id="download-link" href="#" target="_blank" rel="noreferrer" hidden>
-                Download GLB
-              </a>
-              <pre id="api-output" aria-label="API response"></pre>
-            </div>
-          </section>
-        </section>
+        <p class="loading-note" role="note">
+          If the Start Generation button is disabled, please wait a few seconds to tens of seconds while the server finishes loading.
+        </p>
+        <iframe
+          class="space-frame"
+          src="https://e9882e16e1f9bd1705.gradio.live/"
+          title="Pixal3D image to 3D generator workspace"
+          allow="accelerometer; ambient-light-sensor; camera; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; midi; payment; usb; web-share; xr-spatial-tracking"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
       </main>
     </div>
 
@@ -94,6 +55,5 @@
         JavaScript is required to load the Pixal3D AI 3D model generation workspace.
       </p>
     </noscript>
-    <script type="module" src="./app.js"></script>
   </body>
 </html>

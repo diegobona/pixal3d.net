@@ -34,31 +34,20 @@ try {
   throw error;
 }
 
-let appJs = "";
-try {
-  appJs = await readFile(new URL("../app.js", import.meta.url), "utf8");
-} catch (error) {
-  if (error?.code === "ENOENT") {
-    assert.fail("app.js should exist for the Gradio API integration");
-  }
-
-  throw error;
-}
-
 const seoDescription =
   "Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production.";
 const crawlableCopy = html.replace(/\s(?:src|href)="[^"]*"/gi, "");
 
 assert.match(
   html,
-  /<script\s+type="module"\s+src="\.\/app\.js"><\/script>/i,
-  "index.html should load the Gradio API integration script",
+  /<iframe[^>]+src="https:\/\/e9882e16e1f9bd1705\.gradio\.live\/"[^>]*>/i,
+  "index.html should embed the requested gradio.live instance in an iframe",
 );
 
-assert.match(
+assert.doesNotMatch(
   html,
-  /<input[^>]+id="image-input"[^>]+type="file"[^>]+accept="image\/\*"[^>]*>/i,
-  "page should provide an image upload input for API generation",
+  /<script\s+type="module"\s+src="\.\/app\.js"><\/script>|id="pixal3d-form"|id="image-input"/i,
+  "page should not load the retired Gradio API form or script",
 );
 
 assert.doesNotMatch(
@@ -97,6 +86,12 @@ assert.match(
   "header tagline should highlight the realistic image-to-3D model workflow",
 );
 
+assert.match(
+  html,
+  /<p\s+class="loading-note"\s+role="note">\s*If the Start Generation button is disabled, please wait a few seconds to tens of seconds while the server finishes loading\.\s*<\/p>/i,
+  "page should show a visible English note about waiting for Start Generation to become clickable",
+);
+
 assert.doesNotMatch(
   html,
   /<p\s+class="tagline">\s*AI 3D Model Generator\s*<\/p>/i,
@@ -105,7 +100,7 @@ assert.doesNotMatch(
 
 assert.match(
   html,
-  /AI[^<]*3D|3D[^<]*AI|Image-to-3D|Generate 3D Model/i,
+  /AI[^<]*3D|3D[^<]*AI|Image-to-3D/i,
   "page should present the site as an AI 3D or image-to-3D experience",
 );
 
@@ -169,6 +164,12 @@ assert.match(
   "header logo should use a stable 48px square size",
 );
 
+assert.match(
+  css,
+  /\.loading-note\s*{[\s\S]*background:\s*linear-gradient\(135deg,\s*rgba\(45,\s*212,\s*191,\s*0\.16\),\s*rgba\(99,\s*102,\s*241,\s*0\.16\)\)/i,
+  "loading note should be styled as a prominent Pixal3D-themed notice",
+);
+
 assert.doesNotMatch(
   css,
   /\.status-dot|\.actions\s*{/i,
@@ -176,21 +177,13 @@ assert.doesNotMatch(
 );
 
 assert.match(
-  appJs,
-  /@gradio\/client@2\.2\.0\/\+esm/i,
-  "app.js should import the Gradio client from a browser-compatible CDN",
+  css,
+  /\.space-frame\s*{[\s\S]*height:\s*calc\(100vh - 76px - clamp\(20px,\s*4vw,\s*36px\)\)/i,
+  "styles should size the iframe as the primary workspace",
 );
 
-assert.match(
-  appJs,
-  /SPACE_URL\s*=\s*"https:\/\/tencentarc-pixal3d\.hf\.space"[\s\S]*Client\.connect\(SPACE_URL/i,
-  "app.js should connect to the public Pixal3D hf.space Gradio endpoint",
+assert.doesNotMatch(
+  css,
+  /\.api-studio|\.control-panel|\.result-panel/i,
+  "styles should not keep retired API UI rules",
 );
-
-for (const endpoint of ["/preprocess", "/generate_3d", "/extract_glb_api"]) {
-  assert.match(
-    appJs,
-    new RegExp(endpoint.replace("/", "\\/")),
-    `app.js should call the ${endpoint} endpoint`,
-  );
-}
