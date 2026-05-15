@@ -1,23 +1,25 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production."
+      content="Turn images into 3D models online with Pixal3D. Create AI 3D model assets for GLB, STL, games, visual prototypes, and creative 3D workflows."
     />
-    <title>Pixal3D AI 3D Model Generator</title>
-    <meta property="og:title" content="Pixal3D AI 3D Model Generator" />
+    <title>Pixal3D Image to 3D Generator | Free AI 3D Model Generator</title>
+    <link rel="canonical" href="https://pixal3d.net/" />
+    <meta property="og:title" content="Pixal3D Image to 3D Generator | Free AI 3D Model Generator" />
     <meta
       property="og:description"
-      content="Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production."
+      content="Turn images into 3D models online with Pixal3D. Create AI 3D model assets for GLB, STL, games, visual prototypes, and creative 3D workflows."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pixal3d.net/" />
     <meta name="twitter:card" content="summary" />
     <meta
       name="twitter:description"
-      content="Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production."
+      content="Turn images into 3D models online with Pixal3D. Create AI 3D model assets for GLB, STL, games, visual prototypes, and creative 3D workflows."
     />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#111827" />
@@ -26,24 +28,29 @@
   <body>
     <div class="app-shell">
       <header class="topbar" aria-label="Pixal3D workspace header">
-        <div class="brand-block">
+        <a class="brand-block" href="./" aria-label="Pixal3D home">
           <img class="brand-logo" src="./favicon.svg" alt="Pixal3D logo" />
           <div class="brand-copy">
             <h1>Pixal3D Image to 3D Generator</h1>
             <p class="tagline">Turn Any Image into a Realistic 3D Model</p>
           </div>
-        </div>
+        </a>
 
+        <nav class="topnav" aria-label="Primary navigation">
+          <a href="#generator">Generator</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#related-tools">Tools</a>
+        </nav>
       </header>
 
-      <main class="workspace">
+      <main class="workspace" id="generator">
         <p class="loading-note" role="note">
           If the &quot;Start Generation&quot; button is disabled, please wait a few seconds to tens of seconds while the server finishes loading.
         </p>
         <div class="frame-shell">
           <iframe
             class="space-frame"
-            src="https://tencentarc-pixal3d-server.hf.space/?__theme=system"
+            src="https://tencentarc-pixal3d-server.hf.space/?__theme=dark"
             title="Pixal3D image to 3D generator workspace"
             allow="accelerometer; ambient-light-sensor; camera; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; midi; payment; usb; web-share; xr-spatial-tracking"
             referrerpolicy="strict-origin-when-cross-origin"
@@ -51,6 +58,118 @@
           <div class="iframe-warning-mask" aria-hidden="true"></div>
         </div>
       </main>
+
+      <section class="seo-section" aria-labelledby="what-pixal3d-does">
+        <div class="section-copy">
+          <p class="section-kicker">Image to 3D</p>
+          <h2 id="what-pixal3d-does">What Pixal3D does</h2>
+          <p>
+            Pixal3D helps creators turn a reference image into an AI-generated 3D model workflow. Use it for fast visual prototypes, game asset concepts, product mockups, and creative 3D exploration without opening complex modeling software first.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article class="info-card">
+            <strong>Image-first creation</strong>
+            <span>Start from a product photo, character sketch, object render, or concept image.</span>
+          </article>
+          <article class="info-card">
+            <strong>3D asset workflows</strong>
+            <span>Prepare generated assets for GLB, STL, web previews, games, and design reviews.</span>
+          </article>
+          <article class="info-card">
+            <strong>Fast iteration</strong>
+            <span>Test multiple references quickly before investing time in manual 3D cleanup.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="seo-section" id="how-it-works" aria-labelledby="how-to-use-pixal3d">
+        <div class="section-copy">
+          <p class="section-kicker">Simple process</p>
+          <h2 id="how-to-use-pixal3d">How to use Pixal3D</h2>
+        </div>
+        <ol class="step-list">
+          <li>
+            <strong>Upload a clear reference image</strong>
+            <span>Use a single subject with a readable silhouette and minimal background noise.</span>
+          </li>
+          <li>
+            <strong>Start the AI 3D generation</strong>
+            <span>Wait for the workspace to load, then run the generation from the embedded tool.</span>
+          </li>
+          <li>
+            <strong>Review and export the 3D result</strong>
+            <span>Use the generated model in GLB/STL workflows, game prototypes, or visual tests.</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="seo-section" aria-labelledby="formats-and-workflows">
+        <div class="section-copy">
+          <p class="section-kicker">Output intent</p>
+          <h2 id="formats-and-workflows">Formats and workflows</h2>
+          <p>
+            Different projects need different 3D outputs. Pixal3D.net focuses on the image-to-3D workflow around common creator needs: GLB for web and interactive 3D, STL for 3D printing preparation, and general 3D model generation for asset ideation.
+          </p>
+        </div>
+        <div class="format-row" aria-label="Supported 3D workflow formats">
+          <span>Image to 3D Model</span>
+          <span>AI 3D Model</span>
+          <span>Image to GLB</span>
+          <span>Image to STL</span>
+        </div>
+      </section>
+
+      <section class="seo-section" aria-labelledby="faq">
+        <div class="section-copy">
+          <p class="section-kicker">Answers</p>
+          <h2 id="faq">FAQ</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Can Pixal3D create a 3D model from one image?</summary>
+            <p>Yes. Start with a clear reference image, then use the generator to create an AI 3D model draft that can be reviewed and prepared for downstream workflows.</p>
+          </details>
+          <details>
+            <summary>What images work best for image-to-3D generation?</summary>
+            <p>Single-object images with a clean background, strong silhouette, and visible shape details usually work better than crowded scenes or heavily occluded subjects.</p>
+          </details>
+          <details>
+            <summary>Can I use the result for GLB or STL workflows?</summary>
+            <p>Pixal3D.net is organized around common GLB and STL workflows. Always inspect the generated mesh before using it in production, printing, or interactive scenes.</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="seo-section" id="related-tools" aria-labelledby="related-ai-3d-tools">
+        <div class="section-copy">
+          <p class="section-kicker">SEO tool pages</p>
+          <h2 id="related-ai-3d-tools">Related AI 3D tools</h2>
+          <p>Explore focused pages for the image-to-3D searches that creators use most often.</p>
+        </div>
+        <div class="related-grid">
+          <a class="seo-card" href="./image-to-3d-model/">
+            <strong>Image to 3D Model</strong>
+            <span>Convert a reference image into an AI 3D model workflow.</span>
+          </a>
+          <a class="seo-card" href="./ai-3d-model-generator/">
+            <strong>AI 3D Model Generator</strong>
+            <span>Create 3D assets for concepts, games, and visual prototypes.</span>
+          </a>
+          <a class="seo-card" href="./image-to-glb/">
+            <strong>Image to GLB</strong>
+            <span>Prepare image-generated 3D assets for web and interactive use.</span>
+          </a>
+          <a class="seo-card" href="./image-to-stl/">
+            <strong>Image to STL</strong>
+            <span>Explore 3D printing concepts from image-to-3D generation.</span>
+          </a>
+          <a class="seo-card" href="./pixal3d-alternative/">
+            <strong>Pixal3D Alternative</strong>
+            <span>Use Pixal3D.net as an independent image-to-3D tool site.</span>
+          </a>
+        </div>
+      </section>
     </div>
 
     <noscript>

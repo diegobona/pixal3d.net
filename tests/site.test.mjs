@@ -1,138 +1,152 @@
 import { readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 
-let html = "";
-try {
-  html = await readFile(new URL("../index.html", import.meta.url), "utf8");
-} catch (error) {
-  if (error?.code === "ENOENT") {
-    assert.fail("index.html should exist for the Pixal3D MVP");
-  }
+const root = new URL("../", import.meta.url);
+const siteUrl = "https://pixal3d.net";
+const homeTitle = "Pixal3D Image to 3D Generator | Free AI 3D Model Generator";
+const homeDescription =
+  "Turn images into 3D models online with Pixal3D. Create AI 3D model assets for GLB, STL, games, visual prototypes, and creative 3D workflows.";
 
-  throw error;
+async function readProjectFile(path, label = path) {
+  try {
+    return await readFile(new URL(path, root), "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      assert.fail(`${label} should exist`);
+    }
+
+    throw error;
+  }
 }
 
-let favicon = "";
-try {
-  favicon = await readFile(new URL("../favicon.svg", import.meta.url), "utf8");
-} catch (error) {
-  if (error?.code === "ENOENT") {
-    assert.fail("favicon.svg should exist for the Pixal3D browser tab icon");
-  }
-
-  throw error;
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-let css = "";
-try {
-  css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
-} catch (error) {
-  if (error?.code === "ENOENT") {
-    assert.fail("styles.css should exist for the Pixal3D page theme");
-  }
-
-  throw error;
+function withoutAssetUrls(value) {
+  return value.replace(/\s(?:src|href)="[^"]*"/gi, "");
 }
 
-const seoDescription =
-  "Generate 3D model assets with Pixal3D, an AI-powered workspace for exploring 3D creation, visual prototyping, and creative production.";
-const crawlableCopy = html.replace(/\s(?:src|href)="[^"]*"/gi, "");
+function assertMeta(html, name, content, label) {
+  assert.match(
+    html,
+    new RegExp(
+      `<meta\\s+name="${escapeRegExp(name)}"\\s+content="${escapeRegExp(content)}"\\s*\\/?>`,
+      "i",
+    ),
+    label,
+  );
+}
+
+function assertCanonical(html, url, label) {
+  assert.match(
+    html,
+    new RegExp(`<link\\s+rel="canonical"\\s+href="${escapeRegExp(url)}"\\s*\\/?>`, "i"),
+    label,
+  );
+}
+
+function assertNoRiskyClaims(html, label) {
+  assert.doesNotMatch(
+    withoutAssetUrls(html),
+    /\b(MVP|Hugging Face|HuggingFace|TencentARC|official)\b/i,
+    `${label} should not contain MVP, Hugging Face, TencentARC, or official claims in crawlable copy`,
+  );
+}
+
+const html = await readProjectFile("index.html", "index.html");
+const css = await readProjectFile("styles.css", "styles.css");
+const favicon = await readProjectFile("favicon.svg", "favicon.svg");
+const robots = await readProjectFile("robots.txt", "robots.txt");
+const sitemap = await readProjectFile("sitemap.xml", "sitemap.xml");
+
+const toolPages = [
+  {
+    path: "image-to-3d-model/index.html",
+    url: `${siteUrl}/image-to-3d-model/`,
+    title: "Image to 3D Model Generator | Pixal3D",
+    description:
+      "Convert an image into a 3D model workflow with Pixal3D. Start from a reference image, generate a 3D asset, and prepare it for creative use.",
+    h1: "Image to 3D Model Generator",
+  },
+  {
+    path: "ai-3d-model-generator/index.html",
+    url: `${siteUrl}/ai-3d-model-generator/`,
+    title: "AI 3D Model Generator | Pixal3D",
+    description:
+      "Use Pixal3D as an AI 3D model generator for visual prototypes, game assets, product concepts, and image-to-3D creative workflows.",
+    h1: "AI 3D Model Generator",
+  },
+  {
+    path: "image-to-glb/index.html",
+    url: `${siteUrl}/image-to-glb/`,
+    title: "Image to GLB Converter Workflow | Pixal3D",
+    description:
+      "Create a 3D model from an image and prepare it for GLB workflows with Pixal3D. Useful for web, game, AR, and interactive 3D assets.",
+    h1: "Image to GLB Converter Workflow",
+  },
+  {
+    path: "image-to-stl/index.html",
+    url: `${siteUrl}/image-to-stl/`,
+    title: "Image to STL for 3D Printing | Pixal3D",
+    description:
+      "Turn a reference image into a 3D model workflow for STL preparation. Use Pixal3D for image-to-3D assets and 3D printing concepts.",
+    h1: "Image to STL for 3D Printing",
+  },
+  {
+    path: "pixal3d-alternative/index.html",
+    url: `${siteUrl}/pixal3d-alternative/`,
+    title: "Pixal3D Alternative for Image to 3D | Pixal3D.net",
+    description:
+      "Explore Pixal3D.net as an independent image-to-3D tool site for AI 3D model generation, GLB/STL workflows, and creative 3D assets.",
+    h1: "Pixal3D Alternative for Image to 3D",
+  },
+];
 
 assert.match(
   html,
-  /<iframe[^>]+src="https:\/\/tencentarc-pixal3d-server\.hf\.space\/\?__theme=system"[^>]*>/i,
-  "index.html should embed the Pixal3D-Server hf.space app in an iframe",
-);
-
-assert.match(
-  html,
-  /<div\s+class="frame-shell">\s*<iframe[\s\S]*?<\/iframe>\s*<div\s+class="iframe-warning-mask"\s+aria-hidden="true"><\/div>\s*<\/div>/i,
-  "iframe should be wrapped with a decorative mask layer for the embedded warning area",
-);
-
-assert.doesNotMatch(
-  html,
-  /<script\s+type="module"\s+src="\.\/app\.js"><\/script>|id="pixal3d-form"|id="image-input"/i,
-  "page should not load the retired Gradio API form or script",
-);
-
-assert.doesNotMatch(
-  html,
-  /<p\s+class="eyebrow">\s*MVP\s*<\/p>/i,
-  "page should not show the MVP badge in the header",
-);
-
-assert.doesNotMatch(
-  html,
-  />\s*Open Space\s*</i,
-  "page should not show the Open Space button",
-);
-
-assert.match(
-  html,
-  /<h1>\s*Pixal3D Image to 3D Generator\s*<\/h1>/i,
-  "header title should use the requested Pixal3D image-to-3D generator wording",
-);
-
-assert.match(
-  html,
-  /<img\s+class="brand-logo"\s+src="\.\/favicon\.svg"\s+alt="Pixal3D logo"\s*\/?>/i,
-  "header should show the Pixal3D logo before the title",
-);
-
-assert.doesNotMatch(
-  html,
-  /status-dot|Workspace actions|Embedded AI 3D workspace/i,
-  "header should not show a decorative status dot",
-);
-
-assert.match(
-  html,
-  /<p\s+class="tagline">\s*Turn Any Image into a Realistic 3D Model\s*<\/p>/i,
-  "header tagline should highlight the realistic image-to-3D model workflow",
-);
-
-assert.match(
-  html,
-  /<p\s+class="loading-note"\s+role="note">\s*If the &quot;Start Generation&quot; button is disabled, please wait a few seconds to tens of seconds while the server finishes loading\.\s*<\/p>/i,
-  "page should show a visible English note with the Start Generation button name in quotes",
-);
-
-assert.doesNotMatch(
-  html,
-  /<p\s+class="tagline">\s*AI 3D Model Generator\s*<\/p>/i,
-  "header tagline should not use a generic AI 3D generator label",
-);
-
-assert.match(
-  html,
-  /AI[^<]*3D|3D[^<]*AI|Image-to-3D/i,
-  "page should present the site as an AI 3D or image-to-3D experience",
-);
-
-assert.match(
-  html,
-  new RegExp(`<meta\\s+name="description"\\s+content="${seoDescription.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\s*\\/?>`, "i"),
-  "page should use a conventional AI 3D site meta description",
-);
-
-assert.match(
-  html,
-  new RegExp(`<meta\\s+property="og:description"\\s+content="${seoDescription.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\s*\\/?>`, "i"),
-  "page should use the same clean Open Graph description",
-);
-
-assert.doesNotMatch(
-  crawlableCopy,
-  /\b(MVP|Hugging Face|HuggingFace|TencentARC|official)\b/i,
-  "crawlable page text and metadata should not mention MVP, Hugging Face, TencentARC, or official status",
+  /<html\s+lang="en">/i,
+  "home page should be English-first for SEO",
 );
 
 assert.match(
   html,
-  /<link[^>]+rel="icon"[^>]+href="\.\/favicon\.svg"[^>]*>/i,
-  "index.html should reference favicon.svg as the browser tab icon",
+  new RegExp(`<title>\\s*${escapeRegExp(homeTitle)}\\s*<\\/title>`, "i"),
+  "home page should use the planned SEO title",
 );
+
+assertMeta(
+  html,
+  "description",
+  homeDescription,
+  "home page should use the planned SEO meta description",
+);
+
+assertCanonical(html, `${siteUrl}/`, "home page should set a canonical URL");
+
+assert.match(
+  html,
+  /<main\s+class="workspace"\s+id="generator">/i,
+  "home iframe section should expose #generator for tool page CTAs",
+);
+
+assert.match(
+  html,
+  /<iframe[^>]+src="https:\/\/tencentarc-pixal3d-server\.hf\.space\/\?__theme=dark"[^>]*>/i,
+  "index.html should still embed the Pixal3D-Server hf.space app in an iframe",
+);
+
+for (const section of ["What Pixal3D does", "How to use Pixal3D", "Formats and workflows", "FAQ", "Related AI 3D tools"]) {
+  assert.match(html, new RegExp(`>\\s*${escapeRegExp(section)}\\s*<`, "i"), `home page should include ${section}`);
+}
+
+assert.match(
+  html,
+  /<a\s+class="seo-card"[^>]+href="\.\/image-to-3d-model\/"/i,
+  "home page should link to related static SEO tool pages",
+);
+
+assertNoRiskyClaims(html, "home page");
 
 assert.match(
   favicon,
@@ -140,68 +154,54 @@ assert.match(
   "favicon.svg should be a compact SVG icon with geometric Pixal3D cube shapes",
 );
 
+assert.match(css, /color-scheme:\s*dark/i, "page chrome should use a dark color scheme");
+assert.match(css, /\.seo-section\s*{/i, "styles should include SEO content sections");
+assert.match(css, /\.tool-hero\s*{/i, "styles should include tool page hero layout");
+assert.match(css, /\.faq-list\s*{/i, "styles should include FAQ styling");
+assert.match(css, /\.cta-panel\s*{/i, "styles should include CTA panel styling");
+assert.match(css, /\.related-grid\s*{/i, "styles should include related-link card styling");
+assert.doesNotMatch(css, /\.api-studio|\.control-panel|\.result-panel/i, "styles should not keep retired API UI rules");
+
+for (const page of toolPages) {
+  const pageHtml = await readProjectFile(page.path, page.path);
+
+  assert.match(pageHtml, /<html\s+lang="en">/i, `${page.path} should be English-first`);
+  assert.match(
+    pageHtml,
+    new RegExp(`<title>\\s*${escapeRegExp(page.title)}\\s*<\\/title>`, "i"),
+    `${page.path} should have its planned title`,
+  );
+  assertMeta(pageHtml, "description", page.description, `${page.path} should have its planned description`);
+  assertCanonical(pageHtml, page.url, `${page.path} should have a canonical URL`);
+  assert.match(
+    pageHtml,
+    new RegExp(`<h1>\\s*${escapeRegExp(page.h1)}\\s*<\\/h1>`, "i"),
+    `${page.path} should have the planned H1`,
+  );
+  assert.match(pageHtml, />\s*3-step workflow\s*</i, `${page.path} should include a three-step usage section`);
+  assert.match(pageHtml, />\s*Use cases\s*</i, `${page.path} should include use cases`);
+  assert.match(pageHtml, />\s*FAQ\s*</i, `${page.path} should include FAQ`);
+  assert.match(
+    pageHtml,
+    /<a\s+class="primary-cta"\s+href="\/#generator">/i,
+    `${page.path} should CTA back to the home generator`,
+  );
+  assert.doesNotMatch(
+    pageHtml,
+    /<iframe/i,
+    `${page.path} should not duplicate the embedded generator iframe`,
+  );
+  assertNoRiskyClaims(pageHtml, page.path);
+}
+
+assert.match(robots, /User-agent:\s*\*/i, "robots.txt should allow crawlers");
+assert.match(robots, /Allow:\s*\//i, "robots.txt should allow the site");
 assert.match(
-  css,
-  /color-scheme:\s*dark/i,
-  "page chrome should use a dark color scheme matching the embedded Pixal3D workspace",
+  robots,
+  new RegExp(`Sitemap:\\s*${escapeRegExp(`${siteUrl}/sitemap.xml`)}`, "i"),
+  "robots.txt should point to the sitemap",
 );
 
-assert.match(
-  css,
-  /--bg:\s*#0b111d/i,
-  "outer page background should use the same deep blue-gray family as the embedded app",
-);
-
-assert.doesNotMatch(
-  css,
-  /\.topbar\s*{[\s\S]*background:\s*rgba\(255,\s*255,\s*255/i,
-  "topbar should not use a white translucent background",
-);
-
-assert.match(
-  css,
-  /\.topbar\s*{[\s\S]*background:\s*linear-gradient\(180deg,\s*#182132,\s*#111827\)/i,
-  "topbar should use a dark Pixal3D-aligned gradient",
-);
-
-assert.match(
-  css,
-  /\.brand-logo\s*{[\s\S]*width:\s*48px;[\s\S]*height:\s*48px;/i,
-  "header logo should use a stable 48px square size",
-);
-
-assert.match(
-  css,
-  /\.loading-note\s*{[\s\S]*background:\s*linear-gradient\(135deg,\s*rgba\(45,\s*212,\s*191,\s*0\.16\),\s*rgba\(99,\s*102,\s*241,\s*0\.16\)\)/i,
-  "loading note should be styled as a prominent Pixal3D-themed notice",
-);
-
-assert.match(
-  css,
-  /\.frame-shell\s*{[\s\S]*position:\s*relative;[\s\S]*overflow:\s*hidden;/i,
-  "iframe wrapper should establish a clipped positioning context for the warning mask",
-);
-
-assert.match(
-  css,
-  /\.iframe-warning-mask\s*{[\s\S]*position:\s*absolute;[\s\S]*height:\s*38px;[\s\S]*background:\s*#090d18;[\s\S]*box-shadow:\s*none;[\s\S]*pointer-events:\s*none;/i,
-  "warning mask should be a narrow iframe-colored strip that does not block iframe clicks",
-);
-
-assert.doesNotMatch(
-  css,
-  /\.status-dot|\.actions\s*{/i,
-  "styles should not keep unused status dot or action container rules",
-);
-
-assert.match(
-  css,
-  /\.space-frame\s*{[\s\S]*height:\s*max\(1040px,\s*calc\(100vh - 76px - clamp\(20px,\s*4vw,\s*36px\)\)\);[\s\S]*min-height:\s*1040px;/i,
-  "styles should make the iframe tall enough for the embedded instance list to scroll to the bottom",
-);
-
-assert.doesNotMatch(
-  css,
-  /\.api-studio|\.control-panel|\.result-panel/i,
-  "styles should not keep retired API UI rules",
-);
+for (const url of [`${siteUrl}/`, ...toolPages.map((page) => page.url)]) {
+  assert.match(sitemap, new RegExp(`<loc>${escapeRegExp(url)}<\\/loc>`, "i"), `sitemap should include ${url}`);
+}
