@@ -38,15 +38,18 @@
 
       <main class="workspace">
         <p class="loading-note" role="note">
-          If the Start Generation button is disabled, please wait a few seconds to tens of seconds while the server finishes loading.
+          If the &quot;Start Generation&quot; button is disabled, please wait a few seconds to tens of seconds while the server finishes loading.
         </p>
-        <iframe
-          class="space-frame"
-          src="https://e9882e16e1f9bd1705.gradio.live/"
-          title="Pixal3D image to 3D generator workspace"
-          allow="accelerometer; ambient-light-sensor; camera; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; midi; payment; usb; web-share; xr-spatial-tracking"
-          referrerpolicy="strict-origin-when-cross-origin"
-        ></iframe>
+        <div class="frame-shell">
+          <iframe
+            class="space-frame"
+            src="https://tencentarc-pixal3d-server.hf.space/?__theme=system"
+            title="Pixal3D image to 3D generator workspace"
+            allow="accelerometer; ambient-light-sensor; camera; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; midi; payment; usb; web-share; xr-spatial-tracking"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+          <div class="iframe-warning-mask" aria-hidden="true"></div>
+        </div>
       </main>
     </div>
 

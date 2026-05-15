@@ -40,8 +40,14 @@ const crawlableCopy = html.replace(/\s(?:src|href)="[^"]*"/gi, "");
 
 assert.match(
   html,
-  /<iframe[^>]+src="https:\/\/e9882e16e1f9bd1705\.gradio\.live\/"[^>]*>/i,
-  "index.html should embed the requested gradio.live instance in an iframe",
+  /<iframe[^>]+src="https:\/\/tencentarc-pixal3d-server\.hf\.space\/\?__theme=system"[^>]*>/i,
+  "index.html should embed the Pixal3D-Server hf.space app in an iframe",
+);
+
+assert.match(
+  html,
+  /<div\s+class="frame-shell">\s*<iframe[\s\S]*?<\/iframe>\s*<div\s+class="iframe-warning-mask"\s+aria-hidden="true"><\/div>\s*<\/div>/i,
+  "iframe should be wrapped with a decorative mask layer for the embedded warning area",
 );
 
 assert.doesNotMatch(
@@ -88,8 +94,8 @@ assert.match(
 
 assert.match(
   html,
-  /<p\s+class="loading-note"\s+role="note">\s*If the Start Generation button is disabled, please wait a few seconds to tens of seconds while the server finishes loading\.\s*<\/p>/i,
-  "page should show a visible English note about waiting for Start Generation to become clickable",
+  /<p\s+class="loading-note"\s+role="note">\s*If the &quot;Start Generation&quot; button is disabled, please wait a few seconds to tens of seconds while the server finishes loading\.\s*<\/p>/i,
+  "page should show a visible English note with the Start Generation button name in quotes",
 );
 
 assert.doesNotMatch(
@@ -168,6 +174,18 @@ assert.match(
   css,
   /\.loading-note\s*{[\s\S]*background:\s*linear-gradient\(135deg,\s*rgba\(45,\s*212,\s*191,\s*0\.16\),\s*rgba\(99,\s*102,\s*241,\s*0\.16\)\)/i,
   "loading note should be styled as a prominent Pixal3D-themed notice",
+);
+
+assert.match(
+  css,
+  /\.frame-shell\s*{[\s\S]*position:\s*relative;[\s\S]*overflow:\s*hidden;/i,
+  "iframe wrapper should establish a clipped positioning context for the warning mask",
+);
+
+assert.match(
+  css,
+  /\.iframe-warning-mask\s*{[\s\S]*position:\s*absolute;[\s\S]*height:\s*38px;[\s\S]*background:\s*#090d18;[\s\S]*box-shadow:\s*none;[\s\S]*pointer-events:\s*none;/i,
+  "warning mask should be a narrow iframe-colored strip that does not block iframe clicks",
 );
 
 assert.doesNotMatch(
