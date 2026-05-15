@@ -164,19 +164,6 @@ h1 {
   box-shadow: var(--shadow);
 }
 
-.iframe-warning-mask {
-  position: absolute;
-  z-index: 1;
-  top: clamp(208px, 14vw, 232px);
-  left: clamp(64px, 20vw, 420px);
-  right: clamp(64px, 20vw, 420px);
-  height: 86px;
-  border-radius: 0;
-  background: linear-gradient(180deg, #090d18, #080d17);
-  box-shadow: none;
-  pointer-events: none;
-}
-
 .seo-section,
 .tool-main {
   width: min(1180px, calc(100% - clamp(28px, 6vw, 88px)));
@@ -446,13 +433,6 @@ noscript p {
   .space-frame {
     height: max(1040px, calc(100vh - 112px - 20px));
     min-height: 1040px;
-  }
-
-  .iframe-warning-mask {
-    top: 284px;
-    left: 22%;
-    right: 22%;
-    height: 110px;
   }
 
   .topnav {
