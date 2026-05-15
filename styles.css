@@ -117,8 +117,8 @@ h1 {
 .space-frame {
   display: block;
   width: 100%;
-  height: calc(100vh - 76px - clamp(20px, 4vw, 36px));
-  min-height: 620px;
+  height: max(1040px, calc(100vh - 76px - clamp(20px, 4vw, 36px)));
+  min-height: 1040px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
@@ -172,8 +172,8 @@ noscript p {
   }
 
   .space-frame {
-    height: calc(100vh - 112px - 20px);
-    min-height: 560px;
+    height: max(1040px, calc(100vh - 112px - 20px));
+    min-height: 1040px;
   }
 
   .iframe-warning-mask {

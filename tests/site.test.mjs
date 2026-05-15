@@ -196,8 +196,8 @@ assert.doesNotMatch(
 
 assert.match(
   css,
-  /\.space-frame\s*{[\s\S]*height:\s*calc\(100vh - 76px - clamp\(20px,\s*4vw,\s*36px\)\)/i,
-  "styles should size the iframe as the primary workspace",
+  /\.space-frame\s*{[\s\S]*height:\s*max\(1040px,\s*calc\(100vh - 76px - clamp\(20px,\s*4vw,\s*36px\)\)\);[\s\S]*min-height:\s*1040px;/i,
+  "styles should make the iframe tall enough for the embedded instance list to scroll to the bottom",
 );
 
 assert.doesNotMatch(
