@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A Pixal3D blog guide to GLB files, web previews, game prototypes, AR scenes, and image-generated 3D assets."
+    />
+    <title>Image to GLB Guide | Pixal3D Blog</title>
+    <link rel="canonical" href="https://pixal3d.net/blog/image-to-glb/" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar" aria-label="Pixal3D page header">
+        <a class="brand-block" href="../../" aria-label="Pixal3D home">
+          <img class="brand-logo" src="../../favicon.svg" alt="Pixal3D logo" />
+          <div class="brand-copy">
+            <span class="site-title">Pixal3D</span>
+            <p class="tagline">Image to GLB blog</p>
+          </div>
+        </a>
+      </header>
+
+      <main class="blog-main">
+        <article class="blog-article">
+          <header class="article-header">
+            <p class="article-meta">Last updated: May 16, 2026</p>
+            <h1>Image to GLB Guide</h1>
+            <p class="article-lede">
+              GLB is a practical format for showing 3D assets in browsers, product previews, game prototypes, and AR experiments. This guide explains what to check before treating an image-generated model as a useful GLB asset.
+            </p>
+          </header>
+
+          <nav class="article-toc" aria-label="Table of contents">
+            <strong>Table of contents</strong>
+            <ol>
+              <li><a href="#why-glb">Why GLB matters</a></li>
+              <li><a href="#practical-checklist">Practical checklist</a></li>
+              <li><a href="#common-mistakes">Common mistakes</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ol>
+          </nav>
+
+          <section class="article-section" id="why-glb">
+            <h2>Why GLB matters</h2>
+            <p>
+              GLB packages model geometry, materials, textures, and scene data into a single binary file. That makes it convenient for web previews and interactive 3D viewers because the asset is easier to move, test, and share.
+            </p>
+            <p>
+              Image-generated GLB assets are most useful as early visual material. Before serious use, check whether the object loads quickly, whether textures look stable when rotated, and whether the model scale makes sense in the target viewer.
+            </p>
+          </section>
+
+          <aside class="article-note">
+            <strong>Practical tip</strong>
+            <p>If the GLB looks good from the front but breaks from the side, generate again with a clearer source image or prepare for manual cleanup before placing it in a public scene.</p>
+          </aside>
+
+          <section class="article-section" id="practical-checklist">
+            <h2>Practical checklist</h2>
+            <ul class="article-checklist">
+              <li>Open the model in a viewer and rotate it from every angle.</li>
+              <li>Check texture quality on curved or thin surfaces.</li>
+              <li>Confirm the file is not too heavy for your target page or prototype.</li>
+              <li>Look for broken geometry, floating fragments, or missing backsides.</li>
+              <li>Keep a clean source image so you can regenerate if the first GLB is weak.</li>
+            </ul>
+          </section>
+
+          <section class="article-section" id="common-mistakes">
+            <h2>Common mistakes</h2>
+            <ul class="article-mistakes">
+              <li>Only testing the model from the front view.</li>
+              <li>Ignoring file size before placing the GLB on a web page.</li>
+              <li>Using generated textures without checking whether they stretch on important surfaces.</li>
+            </ul>
+          </section>
+
+          <section class="article-section" id="faq">
+            <h2>FAQ</h2>
+            <div class="faq-list">
+              <details><summary>What is GLB used for?</summary><p>GLB is a compact 3D asset format commonly used for web, game, AR, and interactive previews.</p></details>
+              <details><summary>Can Pixal3D directly replace 3D cleanup tools?</summary><p>No. Use Pixal3D for generation and ideation, then inspect and optimize the model before final GLB use.</p></details>
+              <details><summary>What image works best for a GLB asset?</summary><p>Use an image with strong object boundaries and enough visible shape detail to guide the 3D generation.</p></details>
+            </div>
+          </section>
+
+          <a class="article-cta" href="/#generator">Start with the Pixal3D generator</a>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
