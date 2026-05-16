@@ -1,15 +1,28 @@
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import assert from "node:assert/strict";
 
 const root = new URL("../", import.meta.url);
 const siteUrl = "https://pixal3d.net";
 const homeTitle = "Pixal3D Image to 3D Generator | Free AI 3D Model Generator";
+const homeTagline = "Turn Any Image into a Faithful 3D Model Online";
 const homeDescription =
   "Turn images into 3D models online with Pixal3D. Create AI 3D model assets for GLB, STL, games, visual prototypes, and creative 3D projects.";
 
 async function readProjectFile(path, label = path) {
   try {
     return await readFile(new URL(path, root), "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      assert.fail(`${label} should exist`);
+    }
+
+    throw error;
+  }
+}
+
+async function assertProjectFileExists(path, label = path) {
+  try {
+    await stat(new URL(path, root));
   } catch (error) {
     if (error?.code === "ENOENT") {
       assert.fail(`${label} should exist`);
@@ -117,6 +130,17 @@ const blogPages = [
   },
 ];
 
+const galleryImages = [
+  "assets/model-gallery/model-01.png",
+  "assets/model-gallery/model-02.png",
+  "assets/model-gallery/model-03.png",
+  "assets/model-gallery/model-04.webp",
+  "assets/model-gallery/model-05.webp",
+  "assets/model-gallery/model-07.png",
+  "assets/model-gallery/model-09.webp",
+  "assets/model-gallery/model-12.png",
+];
+
 assert.match(
   html,
   /<html\s+lang="en">/i,
@@ -133,6 +157,12 @@ assert.match(
   html,
   /<h1>\s*Pixal3D Image to 3D Generator\s*<\/h1>/i,
   "home page should keep the Pixal3D image-to-3D H1 stable",
+);
+
+assert.match(
+  html,
+  new RegExp(`<p\\s+class="tagline">\\s*${escapeRegExp(homeTagline)}\\s*<\\/p>`, "i"),
+  "home page should use the faithfulness-focused subtitle",
 );
 
 assertMeta(
@@ -188,11 +218,33 @@ assert.match(
 
 for (const section of [
   "Why choose Pixal3D",
+  "3D models created by our AI",
   "How to use Pixal3D",
   "FAQ",
   "Pixal3D Blog",
 ]) {
   assert.match(html, new RegExp(`>\\s*${escapeRegExp(section)}\\s*<`, "i"), `home page should include ${section}`);
+}
+
+assert.match(
+  html,
+  /<section\s+class="model-gallery"\s+aria-labelledby="model-gallery-title">/i,
+  "home page should include a model gallery section between features and usage content",
+);
+
+assert.match(
+  html,
+  /<h2\s+id="model-gallery-title">\s*3D models created by our AI\s*<\/h2>/i,
+  "model gallery should use the requested title",
+);
+
+for (const imagePath of galleryImages) {
+  await assertProjectFileExists(imagePath, imagePath);
+  assert.match(
+    html,
+    new RegExp(`<img\\s+class="model-shot"[^>]+src="\\.\\/${escapeRegExp(imagePath)}"`, "i"),
+    `home gallery should render local image ${imagePath}`,
+  );
 }
 
 assert.match(
@@ -261,6 +313,9 @@ assert.match(css, /\.article-note\s*{/i, "styles should include practical articl
 assert.match(css, /\.faq-list\s*{/i, "styles should include FAQ styling");
 assert.match(css, /\.cta-panel\s*{/i, "styles should include CTA panel styling");
 assert.match(css, /\.related-grid\s*{/i, "styles should include related-link card styling");
+assert.match(css, /\.model-gallery\s*{/i, "styles should include model gallery section styling");
+assert.match(css, /\.model-gallery-grid\s*{/i, "styles should include model gallery grid styling");
+assert.match(css, /\.model-shot\s*{/i, "styles should include stable model shot image sizing");
 assert.match(css, /\.iframe-warning-mask\s*{/i, "styles should include iframe warning mask styling");
 assert.match(
   css,
