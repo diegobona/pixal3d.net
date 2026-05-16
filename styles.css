@@ -82,6 +82,8 @@ a {
 
 .brand-copy {
   min-width: 0;
+  display: grid;
+  gap: 4px;
 }
 
 h1 {
@@ -90,6 +92,10 @@ h1 {
   line-height: 1;
   letter-spacing: 0;
   color: var(--ink);
+}
+
+.brand-copy h1 {
+  line-height: 1.08;
 }
 
 .site-title {
@@ -105,6 +111,7 @@ h1 {
   color: var(--muted);
   font-size: 14px;
   font-weight: 650;
+  line-height: 1.28;
   letter-spacing: 0;
 }
 
@@ -260,14 +267,29 @@ h2 {
   border-top: 1px solid rgba(38, 50, 68, 0.78);
 }
 
-.model-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+.model-gallery-viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.model-gallery-track {
+  display: flex;
+  width: max-content;
+  animation: model-gallery-scroll 54s linear infinite;
+  will-change: transform;
+}
+
+.model-gallery-loop {
+  display: flex;
+  flex: 0 0 auto;
   gap: 12px;
+  padding-right: 12px;
 }
 
 .model-gallery-card {
   margin: 0;
+  flex: 0 0 clamp(138px, 12.6vw, 172px);
   overflow: hidden;
   border: 1px solid rgba(38, 50, 68, 0.86);
   border-radius: 8px;
@@ -280,6 +302,20 @@ h2 {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
+}
+
+.model-gallery-viewport:hover .model-gallery-track {
+  animation-play-state: paused;
+}
+
+@keyframes model-gallery-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .related-grid {
@@ -578,10 +614,6 @@ noscript p {
 }
 
 @media (max-width: 980px) {
-  .model-gallery-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -635,8 +667,8 @@ noscript p {
     width: min(100% - 28px, 1180px);
   }
 
-  .model-gallery-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .model-gallery-card {
+    flex-basis: clamp(136px, 42vw, 170px);
   }
 
   .tool-copy h1 {
@@ -661,5 +693,11 @@ noscript p {
     top: 200px;
     width: min(36rem, calc(100% - 92px));
     height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .model-gallery-track {
+    animation-play-state: paused;
   }
 }

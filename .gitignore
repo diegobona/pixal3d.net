@@ -1,2 +1,5 @@
 node_modules/
 *.png
+!assets/
+!assets/model-gallery/
+!assets/model-gallery/*.png

@@ -138,7 +138,10 @@ const galleryImages = [
   "assets/model-gallery/model-05.webp",
   "assets/model-gallery/model-07.png",
   "assets/model-gallery/model-09.webp",
+  "assets/model-gallery/model-10.webp",
+  "assets/model-gallery/model-11.png",
   "assets/model-gallery/model-12.png",
+  "assets/model-gallery/model-13.png",
 ];
 
 assert.match(
@@ -238,6 +241,29 @@ assert.match(
   "model gallery should use the requested title",
 );
 
+assert.match(
+  html,
+  /<div\s+class="model-gallery-viewport"\s+aria-label="AI-created 3D model examples">/i,
+  "model gallery should use a viewport for horizontal scrolling",
+);
+
+assert.match(
+  html,
+  /<div\s+class="model-gallery-track">/i,
+  "model gallery should use an animated track for slow horizontal scrolling",
+);
+
+assert.ok(
+  (html.match(/<figure\s+class="model-gallery-card"/gi) ?? []).length >= galleryImages.length * 2,
+  "model gallery should duplicate the image set for a continuous auto-scroll effect",
+);
+
+assert.match(
+  html,
+  /<div\s+class="model-gallery-loop"\s+aria-hidden="true">/i,
+  "model gallery should hide the duplicated image set from assistive technology",
+);
+
 for (const imagePath of galleryImages) {
   await assertProjectFileExists(imagePath, imagePath);
   assert.match(
@@ -314,8 +340,30 @@ assert.match(css, /\.faq-list\s*{/i, "styles should include FAQ styling");
 assert.match(css, /\.cta-panel\s*{/i, "styles should include CTA panel styling");
 assert.match(css, /\.related-grid\s*{/i, "styles should include related-link card styling");
 assert.match(css, /\.model-gallery\s*{/i, "styles should include model gallery section styling");
-assert.match(css, /\.model-gallery-grid\s*{/i, "styles should include model gallery grid styling");
+assert.match(css, /\.model-gallery-viewport\s*{/i, "styles should include model gallery viewport styling");
+assert.match(css, /\.model-gallery-track\s*{/i, "styles should include model gallery track styling");
 assert.match(css, /\.model-shot\s*{/i, "styles should include stable model shot image sizing");
+assert.match(
+  css,
+  /\.brand-copy\s*{[\s\S]*?display:\s*grid;[\s\S]*?gap:\s*4px;/i,
+  "header brand copy should use explicit vertical spacing so title and subtitle do not overlap",
+);
+assert.match(
+  css,
+  /\.brand-copy\s+h1\s*{[\s\S]*?line-height:\s*1\.08;/i,
+  "header H1 should use a relaxed line-height for stable font rendering",
+);
+assert.match(
+  css,
+  /\.tagline\s*{[\s\S]*?line-height:\s*1\.28;/i,
+  "header subtitle should use an explicit line-height to avoid visual collision",
+);
+assert.match(css, /@keyframes\s+model-gallery-scroll/i, "styles should define a slow model gallery auto-scroll animation");
+assert.match(
+  css,
+  /\.model-gallery-track\s*{[\s\S]*?animation:\s*model-gallery-scroll/i,
+  "model gallery track should run the slow horizontal animation",
+);
 assert.match(css, /\.iframe-warning-mask\s*{/i, "styles should include iframe warning mask styling");
 assert.match(
   css,
