@@ -164,6 +164,20 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+.iframe-warning-mask {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  top: 204px;
+  left: 50%;
+  width: min(72rem, calc(100% - clamp(88px, 18vw, 26rem)));
+  height: 36px;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: #080d18;
+  box-shadow: 0 0 16px 8px #080d18;
+}
+
 .seo-section,
 .tool-main {
   width: min(1180px, calc(100% - clamp(28px, 6vw, 88px)));
@@ -562,6 +576,12 @@ noscript p {
     min-height: 1040px;
   }
 
+  .iframe-warning-mask {
+    top: 202px;
+    width: min(36rem, calc(100% - 92px));
+    height: 56px;
+  }
+
   .topnav {
     width: 100%;
     overflow-x: auto;
@@ -594,5 +614,13 @@ noscript p {
 
   .article-cta {
     width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .iframe-warning-mask {
+    top: 200px;
+    width: min(36rem, calc(100% - 92px));
+    height: 64px;
   }
 }

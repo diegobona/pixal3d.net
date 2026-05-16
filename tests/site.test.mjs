@@ -180,6 +180,12 @@ assert.match(
   "index.html should still embed the Pixal3D-Server hf.space app in an iframe",
 );
 
+assert.match(
+  html,
+  /<div\s+class="iframe-warning-mask"\s+aria-hidden="true"><\/div>/i,
+  "home iframe shell should include a visual-only mask for remote warning copy",
+);
+
 for (const section of [
   "Why choose Pixal3D",
   "How to use Pixal3D",
@@ -255,6 +261,17 @@ assert.match(css, /\.article-note\s*{/i, "styles should include practical articl
 assert.match(css, /\.faq-list\s*{/i, "styles should include FAQ styling");
 assert.match(css, /\.cta-panel\s*{/i, "styles should include CTA panel styling");
 assert.match(css, /\.related-grid\s*{/i, "styles should include related-link card styling");
+assert.match(css, /\.iframe-warning-mask\s*{/i, "styles should include iframe warning mask styling");
+assert.match(
+  css,
+  /\.iframe-warning-mask\s*{[\s\S]*?pointer-events:\s*none;/i,
+  "iframe warning mask should not block iframe interaction",
+);
+assert.match(
+  css,
+  /\.iframe-warning-mask\s*{[\s\S]*?width:\s*min\([^;]+calc\(100%/i,
+  "iframe warning mask should use responsive width for different desktop screens",
+);
 assert.doesNotMatch(css, /\.api-studio|\.control-panel|\.result-panel/i, "styles should not keep retired API UI rules");
 
 for (const page of blogPages) {
